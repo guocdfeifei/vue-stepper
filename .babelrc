@@ -8,5 +8,6 @@
         ["env", { "targets": { "node": "current" }}]
       ]
     }
-  }
+  },
+  "plugins": ["transform-vue-jsx","transform-runtime"]
 }

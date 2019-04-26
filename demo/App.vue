@@ -2,11 +2,11 @@
     <div id="app">
         <!--Example dependecies-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.1/css/bulma.min.css">
-        <a :href="repoUrl"><img
-                style="position: absolute; top: 0; right: 0; border: 0;"
-                src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
-                alt="Fork me on GitHub"
-                data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+        <!--<a :href="repoUrl"><img-->
+                <!--style="position: absolute; top: 0; right: 0; border: 0;"-->
+                <!--src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"-->
+                <!--alt="Fork me on GitHub"-->
+                <!--data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>-->
 
         <!--Example Elements-->
         <section class="hero">
@@ -19,15 +19,15 @@
                             </div>
                             <div class="is-pulled-left" style="text-align: left">
                                 <h1 class="title text-medium-grey" style="margin-bottom: .5rem">
-                                    Stepper
+                                    学习计划生成
                                 </h1>
                                 <hr class="is-marginless">
                                 <h2 class="subtitle text-light-grey" style="margin-top: .5rem">
-                                    A Vue Component
+                                    让学习更有针对性
                                     <span class="is-pulled-right">
                                         <!-- Place this tag where you want the button to render. -->
-<a class="github-button" href="https://github.com/PygmySlowLoris/vue-stepper" data-icon="octicon-star" data-size="large"
-   aria-label="Star PygmySlowLoris/vue-stepper on GitHub">Star</a>
+<!--<a class="github-button" href="https://github.com/PygmySlowLoris/vue-stepper" data-icon="octicon-star" data-size="large"-->
+   <!--aria-label="Star PygmySlowLoris/vue-stepper on GitHub">Star</a>-->
                                     </span>
                                 </h2>
                             </div>
@@ -40,7 +40,7 @@
         <section class="section" style="padding-top: .5rem">
             <div class="container">
                 <div class="columns">
-                    <div class="column is-8 is-offset-2">
+                    <div class="column is-12 is-offset-0">
                         <horizontal-stepper :steps="demoSteps" @completed-step="completeStep" :top-buttons="true"
                                             @active-step="isStepActive" @stepper-finished="alert"></horizontal-stepper>
                     </div>
@@ -52,12 +52,12 @@
             <div class="container">
                 <div class="content has-text-centered">
                     <p>
-                        <strong>Stepper Vue Component</strong> by <a
-                            :href="teamUrl">Pygmy Team</a>.
+                        <strong>学习计划生成</strong> by <a
+                            :href="teamUrl">琪睿科技</a>.
                     </p>
-                    <p>
-                        <small>Used dependencies for this demo: <a href="http://bulma.io">bulma</a></small>
-                    </p>
+                    <!--<p>-->
+                        <!--<small>Used dependencies for this demo: <a href="http://bulma.io">bulma</a></small>-->
+                    <!--</p>-->
                 </div>
             </div>
         </footer>
@@ -69,9 +69,75 @@
 
     import StepOne from './StepOne.vue';
     import StepTwo from './StepTwo.vue';
+    import StepThree from './StepThree.vue';
+//    import data from './assets/data.json'
+    import axios from 'axios'
+    let url = "./index.php"
+    let getdata=[];
+    axios.get(url).then((res)=>{
+        console.log('res11111111111111',res);
+        getdata = res;
+        console.log('res11111111111111',typeof(getdata),getdata);
+        var data = getdata.data;
+        console.log('data',typeof(data),data[0]);
+        var datatimelist={};
+        var tmpi=0;
+        function getkeyvalue(data){
+            i=i+1;
+            console.log('valuedata',data,typeof(data));
+            if(typeof(data)==typeof('aa') || i>10){
+                return;
+            }
+            if(data.hasOwnProperty("children")){
+                //解析里层是否有时间，有时间和title 出键值对
+                if(data.hasOwnProperty("time") && data.hasOwnProperty("title")){
+//                    getkeyvalue(data);
+                    //满足条件
+                    datatimelist[data.title]=data.time;
+                }else{
 
-    const teamUrl = 'https://github.com/PygmySlowLoris';
-    const repoUrl = 'https://github.com/PygmySlowLoris/vue-stepper';
+                    for( var i=0;i<data.children.length;i++){
+                        var opjson = data.children[i];
+                        console.log('item',opjson,opjson.hasOwnProperty("time"));
+                        if(opjson.hasOwnProperty("time") && data.hasOwnProperty("title")){
+//                    getkeyvalue(data);`
+                            //满足条件
+                            datatimelist[opjson.title]=opjson.time;
+                        }else{
+                            getkeyvalue(opjson);
+                        }
+                    }
+                }
+            }else{
+                for( var i=0;i<data.length;i++){
+                    var opjson = data[i];
+                    console.log('item',opjson,opjson.hasOwnProperty("time"));
+                    if(opjson.hasOwnProperty("time") && data.hasOwnProperty("title")){
+//                    getkeyvalue(data);
+                        //满足条件
+                        datatimelist[data.title]=data.time;
+                    }else{
+                        getkeyvalue(opjson);
+                    }
+                }
+            }
+        }
+        getkeyvalue(data);
+        console.log('datatimelist',datatimelist,JSON.stringify(datatimelist));
+
+
+        sessionStorage.setItem('currdata', JSON.stringify(data));
+        sessionStorage.setItem('datatimejson', JSON.stringify(datatimelist));
+        var aa = sessionStorage.getItem('currdata');
+        console.log('aa',typeof(aa),aa,JSON.parse(aa));
+
+
+    });
+
+
+
+    const teamUrl = 'http://guofeifei.com';
+    const repoUrl = 'https://github.com/guocdfeifei/vue-stepper';
 
     export default {
         name: 'app',
@@ -82,38 +148,48 @@
             return {
                 repoUrl: repoUrl,
                 teamUrl: teamUrl,
+
                 demoSteps: [
                     {
-                        icon: 'mail',
+                        icon: 'date_range',
                         name: 'first',
-                        title: 'Sample title 1',
-                        subtitle: 'Subtitle sample',
+                        title: '填日期',
+                        subtitle: '填计划日期',
                         component: StepOne,
                         completed: false
 
                     },
                     {
-                        icon: 'report_problem',
+                        icon: 'assessment',
                         name: 'second',
-                        title: 'Sample title 2',
-                        subtitle: 'Subtitle sample',
+                        title: '选课配时',
+                        subtitle: '可选择多组课程',
                         component: StepTwo,
                         completed: false
                     },
                     {
-                        icon: 'announcement',
+                        icon: 'alarm',
                         name: 'third',
-                        title: 'Sample title 3',
-                        subtitle: 'Subtitle sample',
-                        component: StepOne,
+                        title: '预览成图',
+                        subtitle: '分享',
+                        component: StepThree,
                         completed: false
                     }
                 ],
                 activeStep: 0
             }
         },
-        computed: {},
+        computed: {
+
+//            currdata:'',
+//            currlist:[],
+//            lastcurrlist:[],
+        },
         methods: {
+//            setcurrlist(list){
+//                console.log('list11111',list);
+//              this.currlist=  list;
+//            },
             completeStep(payload) {
                 this.demoSteps.forEach((step) => {
                     if (step.name === payload.name) {

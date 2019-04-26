@@ -1,5 +1,5 @@
 <template>
-    <div class="card" style="margin: 0rem">
+    <div class="card" style="margin: 3rem">
         <header class="card-header">
             <!--<p class="card-header-title">-->
                 <!--Component-->
@@ -9,9 +9,9 @@
                 <!--<i class="fa fa-angle-down" aria-hidden="true"></i>-->
               <!--</span>-->
             <!--</a>-->
-            <a class="card-footer-item"  @click="addcurr">新增选课组</a>
+            <!--<a class="card-footer-item"  @click="addcurr">新增选课组</a>-->
             <!--<a class="card-footer-item">Edit</a>-->
-            <a class="card-footer-item" @click="canContinue">选课完成</a>
+            <a class="card-footer-item" @click="canContinue">生成学习计划</a>
         </header>
         <div class="card-content">
             <div class="content">
@@ -19,7 +19,6 @@
                 <!--<a href="#">@bulmaio</a>. <a href="#">#css</a> <a href="#">#responsive</a>-->
                 <!--<br>-->
                 <!--<time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>-->
-
                 <table class="bg-white" style="background-color: white" id="my-node">
                     <tr>
                         <th width="13%">日期</th>
@@ -27,14 +26,27 @@
                         <th width="17%">建议时长</th>
                     </tr>
                     <tr  v-for=" curr in currSelected" >
-                        <td><input type="date" placeholder="日期" class="input" v-model="curr.opdata"></td>
+                        <td>{{curr.opdata | formatdata}}</td>
                         <td><span v-for="item in curr.currlist">{{item}}</span> </td>
-                        <td><input type="text" placeholder="建议时间" class="input" v-model="curr.protime"></td>
+                        <td>{{curr.protime}}</td>
                     </tr>
                 </table>
 
-                <div class="tree3"> <v-select-tree ref='tree3' :data='treeData3' v-model='initSelected' :multiple="true"/></div>
+                <!--<div v-for=" curr in currSelected"  calss="tree-container1">-->
+                    <!--<div  class="tag-box-container">-->
+                        <!--<div class="tag-box" style="transition: transform 0.4s ease 0s; transform: translateX(0px);">-->
 
+                            <!--<div class="tag" v-for="item in curr">-->
+                                <!--{{ item }}-->
+                                <!--&lt;!&ndash;<span class="rmNode">x</span>&ndash;&gt;-->
+                            <!--</div>-->
+
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<span>建议时长</span>-->
+
+                <!--<div class="tree3"> <v-select-tree ref='tree3' :data='treeData3' v-model='initSelected' :multiple="true"/></div>-->
             </div>
 
         </div>
@@ -43,19 +55,15 @@
             <!--&lt;!&ndash;<a class="card-footer-item">Edit</a>&ndash;&gt;-->
             <!--<a class="card-footer-item" @click="canContinue">选课完成</a>-->
         <!--</footer>-->
-        <div style="background-color: #ddd;height: 50px;color: red;text-align: center;margin: 0 auto;
-width: 100px;line-height:50px;
-position: fixed;
-bottom: 10px;right: 10px;border-radius:55px;">已选{{sum}}分</div>
+        <img  :src="imgsrc" >
     </div>
-
 </template>
 
 <script>
 //    import 'vue-tree-halower/dist/halower-tree.min.css' // 你可以自定义树的样式
 ////    import VTree from 'vue-tree-halower'
 //    import {VTree, VSelectTree} from 'vue-tree-halower'
-
+import domtoimage from 'dom-to-image';
 //    Vue.use(VTree)
     export default {
         props: ['currentStep'],
@@ -63,13 +71,59 @@ bottom: 10px;right: 10px;border-radius:55px;">已选{{sum}}分</div>
             return {
                 lang: 'zh',
                 searchword: '',
-                recdata:sessionStorage.getItem('recdata'),
-                currSelected: [],
+                imgsrc:'',
+                currSelected: JSON.parse(sessionStorage.getItem('currSelected')),
                 initSelected: [],
-                treeData3: JSON.parse(sessionStorage.getItem('currdata')),
-                datatimejson: JSON.parse(sessionStorage.getItem('datatimejson')),
-                sum:0
+                treeData3: [{
+                    title: '必修',
+                    expanded: true,
+                    children: [{
+                        title: '集合+函数+基础初等函数',
+                        expanded: true,
+                        children: [{
+                            title: '1.1.1-1集合的含义与表示--集合的含义和特征'
+                        }, {
+                            title: '1.1.1-2元素与集合的关系'
+                        }, {
+                            title: '1.1.1-3集合的表示方法'
+                        }]
+                    },{
+                        title: '立体几何+直线和圆',
+                        expanded: true,
+                        children: [{
+                            title: '1.1-1空间几何体---概念'
+                        }, {
+                            title: '1.1-2基础练习题'
+                        }]
+                    }]
+                },{
+                    title: '选修',
+                    expanded: true,
+                    children: [{
+                        title: '统计案例',
+                        expanded: true,
+                        children: [{
+                            title: '1.1回归分析'
+                        }, {
+                            title: '1.2独立性检验'
+                        }]
+                    },{
+                        title: '推理与证明',
+                        expanded: true,
+                        children: [{
+                            title: '2.1合情推理与演绎推理'
+                        }, {
+                            title: '2.2直接证明与间接证明'
+                        }]
+                    }]
+                }]
             }
+        },
+        filters: {
+            formatdata(value){
+
+                return value.substr(5);
+            },
         },
         methods: {
 
@@ -77,33 +131,32 @@ bottom: 10px;right: 10px;border-radius:55px;">已选{{sum}}分</div>
 //                alert(1);
                 var nowarr = JSON.parse(JSON.stringify(this.initSelected));
                 console.log('nowarr',nowarr);
-                var opdata = new Date(this.recdata);
-                //todo 根据选课计算视频时间
-                var fenzhong = this.sum;
-                var timetxt = fenzhong+'分钟';//fenzhong>60?parseInt(fenzhong/60)+'小时'+;
-                var nowjson = {'opdata':this.recdata,'currlist':nowarr,'protime':timetxt};
-                opdata = new Date(opdata.setDate(opdata.getDate()+1));
-                console.log('opdata',opdata);
-                var opmonth=(opdata.getMonth() + 1)<=9?'0'+(opdata.getMonth() + 1).toString():(opdata.getMonth() + 1);
-                console.log('opmonth',opmonth);
-                var opdatastr = opdata.getFullYear()+"-"+opmonth+"-"+opdata.getDate();
-                console.log('opdatastr',opdatastr);
-                this.recdata=opdatastr;
-                this.currSelected.push(nowjson);
+                this.currSelected.push(nowarr);
 //                this.initSelected=[];
-//                var _this=this;
-//                _this.initSelected.forEach(function (item,index) {
-//                    console.log(item,index);
-////                      _this.initSelected.splice(index,1);
-////                    _this.$refs.v-select-tree.initSelected.splice(index,1);
-////                    _this.$refs.tree3.delNode(item,'',index)
-////                            return true;
-//                        });
+                var _this=this;
+                _this.initSelected.forEach(function (item,index) {
+                    console.log(item,index);
+                      _this.initSelected.splice(index,1);
+//                    _this.$refs.v-select-tree.initSelected.splice(index,1);
+//                    _this.$refs.tree3.delNode(item,'',index)
+//                            return true;
+                        });
             },
           canContinue() {
-                console.log('recdata currSelected',sessionStorage.getItem('recdata'));
-              sessionStorage.setItem('currSelected', JSON.stringify(this.currSelected));
-//              this.$emit('setcurrlist', {value: this.currSelected});
+              var node = document.getElementById('my-node');
+              var _this=this;
+              domtoimage.toPng(node)
+                  .then(function (dataUrl) {
+                      var img = new Image();
+                      img.src = dataUrl;
+                      console.log('dataUrl',dataUrl);
+                      _this.imgsrc = dataUrl;
+//                      document.body.appendChild(img);
+                  })
+                  .catch(function (error) {
+                      console.error('oops, something went wrong!', error);
+                  });
+//              console.log('recdata 11currSelected',sessionStorage.getItem('recdata'),typeof(sessionStorage.getItem('currSelected')),typeor(this.currSelected));
               this.$emit('can-continue', {value: true});
           },
             nodechecked (node, v) {
@@ -154,38 +207,9 @@ bottom: 10px;right: 10px;border-radius:55px;">已选{{sum}}分</div>
                 this.$refs.tree3.searchNodes(this.searchword)
             }
         },
-        watch:{
-            initSelected(val){
-                console.log('initSelected',val,JSON.stringify(val));
-                var sum = 0;
-                for(var i=0;i<val.length;i++){
-                    if(this.datatimejson.hasOwnProperty(val[i])){
-                        console.log(val[i],this.datatimejson[val[i]]);//[val[i]].time
-                        sum = sum+parseInt(this.datatimejson[val[i]]);
-                    }
 
-                }
-                console.log('sum',sum);
-                this.sum = sum;
-            }
-        },
         mounted() {
 //            this.$emit('can-continue', {value: true})
-            Date.prototype.Format = function (fmt) {
-                var o = {
-                    "M+": this.getMonth() + 1, //月份
-                    "d+": this.getDate(), //日
-                    "h+": this.getHours(), //小时
-                    "m+": this.getMinutes(), //分
-                    "s+": this.getSeconds(), //秒
-                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-                    "S": this.getMilliseconds() //毫秒
-                };
-                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-                for (var k in o)
-                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-                return fmt;
-            }
         }
     }
 </script>

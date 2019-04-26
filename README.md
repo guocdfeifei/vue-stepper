@@ -1,3 +1,5 @@
+npm run build
+
 #   Stepper [![Build Status](https://travis-ci.org/PygmySlowLoris/vue-stepper.svg?branch=master)](https://travis-ci.org/PygmySlowLoris/vue-stepper)
 
 <p align="center">
