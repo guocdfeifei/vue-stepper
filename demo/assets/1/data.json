@@ -1,0 +1,74 @@
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "title": "1.1.1-1集合的含义与表示--集合的含义和特征",
+            "time": "10"
+          },
+          {
+            "title": "1.1.1-2元素与集合的关系",
+            "time": "10"
+          },
+          {
+            "title": "1.1.1-3集合的表示方法",
+            "time": "10"
+          }
+        ],
+        "expanded": true,
+        "title": "集合+函数+基础初等函数"
+      },
+      {
+        "children": [
+          {
+            "title": "1.1-1空间几何体---概念",
+            "time": "10"
+          },
+          {
+            "title": "1.1-2基础练习题",
+            "time": "10"
+          }
+        ],
+        "expanded": true,
+        "title": "立体几何+直线和圆"
+      }
+    ],
+    "expanded": true,
+    "title": "必修"
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "title": "1.1回归分析",
+            "time": "10"
+          },
+          {
+            "title": "1.2独立性检验",
+            "time": "10"
+          }
+        ],
+        "expanded": true,
+        "title": "统计案例"
+      },
+      {
+        "children": [
+          {
+            "title": "2.1合情推理与演绎推理",
+            "time": "10"
+          },
+          {
+            "title": "2.2直接证明与间接证明",
+            "time": "10"
+          }
+        ],
+        "expanded": true,
+        "title": "推理与证明"
+      }
+    ],
+    "expanded": true,
+    "title": "选修"
+  }
+]

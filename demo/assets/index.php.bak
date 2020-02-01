@@ -1,0 +1,35 @@
+<?php
+
+ 
+    // 从文件中读取数据到PHP变量  
+    $json_string = file_get_contents('./data.json');  
+      
+    // 用参数true把JSON字符串强制转成PHP数组  
+    $data = json_decode($json_string, true);  
+      
+    // 显示出来看看  
+    // var_dump($json_string); 
+    // var_dump ($data); 
+    // print_r($data); 
+ 
+    //产品循环
+    function foreachFun($d,$type,$proId)
+    {
+      foreach ($d["goods"] as $key => $value) {
+         if($value["type"] == $type){
+            $results = $value;
+         }
+      }
+      foreach ($results["product"] as $key => $value) {
+         if($value["id"] == $proId){
+            $result = $value;
+         }
+      }
+      return $result;
+    }
+ 
+ 
+    $res = foreachFun($data,$type,$proId);
+    print_r($res);
+ 
+  ?>
